@@ -5,14 +5,6 @@ require_once "../libs/database.php";
 $studid = "2";
 $merit = 50;
 
-// $query = "SELECT * FROM program WHERE progID='$progid'";
-// $resultProg = mysqli_query($conn,$query);
-// $countProg = mysqli_num_rows($resultProg);
-
-// $sql = "SELECT * FROM student WHERE studMatric ='$matric'";
-// $result = mysqli_query($conn,$sql);
-// $count = mysqli_num_rows($result);
-
 $sql = "SELECT * FROM attendance INNER JOIN program ON attendance.progID = program.progID  INNER JOIN student on attendance.studID = student.studID WHERE attendance.studID ='$studid' order by program.progDate";
 // print_r($sql);
 // exit();

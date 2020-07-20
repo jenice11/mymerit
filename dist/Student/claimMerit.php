@@ -6,53 +6,94 @@ require_once "../libs/database.php";
     // $latitude = $_POST['latitude'];
     // $longitude = $_POST['longitude'];
     // $ip = $_POST['ip'];
-$progid = "1";
-$role = "2";
 
     // $matric = $_POST['matrics'];
-$matric = "CB18174";
-$merit = 50;
 
-function get_client_ip() {
-    $ipaddress = '';
-    if (isset($_SERVER['HTTP_CLIENT_IP']))
-        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-    else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    else if(isset($_SERVER['HTTP_X_FORWARDED']))
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-    else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
-        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-    else if(isset($_SERVER['HTTP_FORWARDED']))
-        $ipaddress = $_SERVER['HTTP_FORWARDED'];
-    else if(isset($_SERVER['REMOTE_ADDR']))
-        $ipaddress = $_SERVER['REMOTE_ADDR'];
-    else
-        $ipaddress = 'UNKNOWN';
-    return $ipaddress;
-} 
-$ip = get_client_ip();
+$merit = 0;
+$rolechk = false;
+$role = "Participant";
+
+
+//need get variable here (static so far)
+$matric = "CB18188";
+$progid = "1";
+$attID = "14";
+
+//committee sql check
+//chair
+$sqlChair = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progChair WHERE program.progID='$progid' AND student.studMatric = '$matric'";
+$resultChair = mysqli_query($conn,$sqlChair);
+$countChair = mysqli_num_rows($resultChair);
+
+//co-chair
+$sqlCo = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progCo WHERE program.progID='$progid' AND student.studMatric = '$matric'";
+$resultCo = mysqli_query($conn,$sqlCo);
+$countCo = mysqli_num_rows($resultCo);
+
+//main
+$sqlMain = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progCo WHERE program.progID='$progid' AND student.studMatric = '$matric'";
+$resultMain = mysqli_query($conn,$sqlMain);
+$countMain = mysqli_num_rows($resultMain);
+
+//sub
+$sqlSub = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progCo WHERE program.progID='$progid' AND student.studMatric = '$matric'";
+$resultSub = mysqli_query($conn,$sqlSub);
+$countSub = mysqli_num_rows($resultSub);
 
 $query = "SELECT * FROM program WHERE progID='$progid'";
 $resultProg = mysqli_query($conn,$query);
 $countProg = mysqli_num_rows($resultProg);
 
+if ($countChair == 1) {
+    $merit = 500;
+    $role = "Program chair";
+    $rolechk = true;
+} elseif ($countCo == 1) {
+    $merit = 450;
+    $role = "Program co-chair";
+    $rolechk = true;
+} elseif ($countMain == 1) {
+    $merit = 300;
+    $role = "Main committee";
+    $rolechk = true;
+} elseif ($countSub == 1) {
+    $merit = 200;
+    $role = "Sub committee";
+    $rolechk = true;
+}
+
 $sql = "SELECT * FROM student WHERE studMatric ='$matric'";
 $result = mysqli_query($conn,$sql);
 $count = mysqli_num_rows($result);
 
+
+while($row = mysqli_fetch_assoc($resultProg)){
+    $progID = $row["progID"];
+    $progName = $row["progName"];
+    $progDate = $row["progDate"];
+    $progLocation = $row["progLocation"];
+    $progDesc = $row["progDesc"];
+    $merit = $row['progMerit'];
+}
+
+while($row2 = mysqli_fetch_assoc($result)){
+    $studName = $row2["studName"];
+    $studMatric = $row2["studMatric"];
+    $studPhone = $row2["studPhone"];
+}
+
 if (isset($_POST['claim'])){
     if($countProg == 1) 
     {
-        $sql = "INSERT INTO attendance (studID, progID, latitude, longitude, ip) VALUES (2, '$progid', '$latitude', '$longitude', '$ip')";
+        $sql = "UPDATE attendance SET merit ='$merit' WHERE attID = '$attID'";
         if (mysqli_query($conn, $sql)) {
-            echo "<script>alert('Identification Successful!')</script>";
+            echo "<script>alert('Merit Claimed Successfully!')</script>";
         } else {
             echo "<script>alert('".mysqli_error($conn)."')</script>";       
         }
     } 
     else {
-        echo "<script>alert('Identification Failed!')</script>";
+        echo "<script>alert('Merit Claim Failed!')</script>";
     }
     $conn->close();
 }
@@ -126,21 +167,6 @@ if (isset($_POST['claim'])){
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid">
-                    <?php 
-                    while($row = mysqli_fetch_assoc($resultProg)){
-                        $progID = $row["progID"];
-                        $progName = $row["progName"];
-                        $progDate = $row["progDate"];
-                        $progLocation = $row["progLocation"];
-                        $progDesc = $row["progDesc"];
-                    }
-
-                    while($row2 = mysqli_fetch_assoc($result)){
-                        $studName = $row2["studName"];
-                        $studMatric = $row2["studMatric"];
-                        $studPhone = $row2["studPhone"];
-                    }
-                    ?>
                     <div class="row justify-content-center mt-3">
                         <div class="col-lg-12">
                             <div class="card shadow-lg border-0 rounded-lg mt-1">
@@ -148,12 +174,6 @@ if (isset($_POST['claim'])){
                                 <div class="card-body mx-4" >
                                     <!-- verification form -->
                                     <form action="" method="POST">
-                                        <input type="hidden" name="role" value="<?=$role?>">
-                                        <input type="hidden" name="progid" value="<?=$progid?>">
-                                        <input type="hidden" name="latitude" value="<?=$latitude?>">
-                                        <input type="hidden" name="longitude" value="<?=$longitude?>">
-                                        <input type="hidden" name="ip" value="<?=$ip?>">
-
                                         <table class="table table-bordered" width="100%" cellspacing="0">
                                             <tr>
                                                 <th>Program Name</th>
@@ -171,23 +191,23 @@ if (isset($_POST['claim'])){
                                         <br>
 
                                         <?php
-                                        $comRole = "Chair";
-                                        if($comRole == "Chair")
-                                        {
-                                            $comMerit = 500;
-                                        }
-
-                                        if($role == "1")
+                                        if($rolechk == true)
                                         { 
                                             ?>
                                             <table class="table table-bordered" width="100%" cellspacing="0">
                                                 <tr>
+                                                    <th>Commitee's Name</th>
+                                                    <th>Commitee's Matric</th>
+                                                    <th>Commitee's Phone</th>
                                                     <th>Commitee Role</th>
                                                     <th>Commitee Merit</th>
                                                 </tr>
                                                 <tr>
-                                                    <td><?php echo $comRole ?></td>
-                                                    <td><?php echo $comMerit ?></td>
+                                                    <td><?php echo $studName ?></td>
+                                                    <td><?php echo $studMatric ?></td>
+                                                    <td><?php echo $studPhone ?></td>
+                                                    <td><?php echo $role ?></td>
+                                                    <td><?php echo $merit ?></td>
                                                 </tr>
                                             </table>
                                             <?php 
