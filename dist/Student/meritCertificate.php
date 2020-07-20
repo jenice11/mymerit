@@ -13,12 +13,17 @@ $merit = 50;
 // $result = mysqli_query($conn,$sql);
 // $count = mysqli_num_rows($result);
 
-$sql = "SELECT * FROM attendance INNER JOIN program ON attendance.progID = program.progID  INNER JOIN student on attendance.studID = student.studID WHERE attendance.studID ='$studid'";
+$sql = "SELECT * FROM attendance INNER JOIN program ON attendance.progID = program.progID  INNER JOIN student on attendance.studID = student.studID WHERE attendance.studID ='$studid' order by program.progDate";
 // print_r($sql);
 // exit();
 $result = mysqli_query($conn,$sql);
+$result2 = mysqli_query($conn,$sql);
 // $data[] = mysqli_fetch_assoc($result);
 
+while($student = mysqli_fetch_array($result2)) { 
+    $studName = $student['studName'];
+    $studMatric = $student['studMatric'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -101,6 +106,20 @@ $result = mysqli_query($conn,$sql);
                             <div class="card shadow-lg border-0 rounded-lg mt-1">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-1">Merit Certificate</h3></div>
                                 <div class="card-body mx-4">
+                                    <table class="table-borderless mb-2" width="50%" >
+                                        <tr>
+                                            <td width="5%"><b>Name:</b></td>
+                                            <td width="45%"><?php echo $studName ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="5%"><b>Matric: </b></td>
+                                            <td width="45%"><?php echo $studMatric ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="5%"><b>Session: </b></td>
+                                            <td width="45%">2019/2020</td>
+                                        </tr>
+                                    </table>
                                     <table class="table" width="100%"  cellspacing="0">
                                         <tr>
                                             <thead>
