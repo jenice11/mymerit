@@ -6,7 +6,7 @@ require_once "../libs/database.php";
     // $latitude = $_POST['latitude'];
     // $longitude = $_POST['longitude'];
     // $ip = $_POST['ip'];
-$progid = "1";
+$progid = $_GET['progid'];
 $role = "2";
 
     // $matric = $_POST['matrics'];
