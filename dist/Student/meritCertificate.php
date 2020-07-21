@@ -3,19 +3,23 @@ require_once "../libs/database.php";
 
     // $matric = $_POST['matrics'];
 $studid = "2";
-$merit = 50;
 
-$sql = "SELECT * FROM attendance INNER JOIN program ON attendance.progID = program.progID  INNER JOIN student on attendance.studID = student.studID WHERE attendance.studID ='$studid' order by program.progDate";
-// print_r($sql);
-// exit();
+$sql = "SELECT * FROM attendance INNER JOIN program ON attendance.progID = program.progID  INNER JOIN student on attendance.studID = student.studID, (SELECT SUM(merit) FROM attendance as totalmerit) t WHERE attendance.studID ='$studid' order by program.progDate";
+
 $result = mysqli_query($conn,$sql);
 $result2 = mysqli_query($conn,$sql);
 // $data[] = mysqli_fetch_assoc($result);
 
-while($student = mysqli_fetch_array($result2)) { 
+while($student = mysqli_fetch_array($result2)) {
     $studName = $student['studName'];
     $studMatric = $student['studMatric'];
+    $totalmerit = $student['SUM(merit)'];
+    
 }
+
+$countSQL = "SELECT COUNT(studID) as count FROM attendance WHERE studID ='$studid'";
+$resultCount = mysqli_query($conn,$countSQL);
+$count = mysqli_fetch_assoc($resultCount);
 ?>
 
 <!DOCTYPE html>
@@ -111,6 +115,10 @@ while($student = mysqli_fetch_array($result2)) {
                                             <td width="5%"><b>Session: </b></td>
                                             <td width="45%">2019/2020</td>
                                         </tr>
+                                        <tr>
+                                            <td width="5%"><b>Program Participated: </b></td>
+                                            <td width="45%"><?php echo implode($count)?></td>
+                                        </tr>
                                     </table>
                                     <table class="table" width="100%"  cellspacing="0">
                                         <tr>
@@ -125,7 +133,6 @@ while($student = mysqli_fetch_array($result2)) {
                                         </tr>
                                         <?php
                                         $i=1;
-                                        $totalmerit = 0;
                                         while($row = mysqli_fetch_array($result)) { ?>
                                             <tbody>
                                                 <tr>
@@ -158,7 +165,6 @@ while($student = mysqli_fetch_array($result2)) {
                                             </tbody>
                                             <?php 
                                             $i++;
-                                            $totalmerit = $totalmerit + $row['merit'];
                                         } ?>
                                         <tfoot>
                                             <tr>
