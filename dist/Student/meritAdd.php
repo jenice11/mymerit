@@ -5,6 +5,7 @@ if (isset($_POST['addMerit'])){
     $sql = "INSERT INTO merit (meritPosition, meritAmount) VALUES ('$_POST[position]', '$_POST[amount]')";
     if (mysqli_query($conn, $sql)) {
         echo "<script>alert('Committee Merit Added Successful!')</script>";
+         echo "<script type= 'text/javascript'> window.location='meritList.php'</script>";
     } else {
         echo "<script>alert('".mysqli_error($conn)."')</script>";       
     }
@@ -146,7 +147,7 @@ if (isset($_POST['addMerit'])){
                                     </form>
                                 </div>
                                 <div class="card-footer text-center">
-                                    <div class="small"><a href="#.html">View Merit List</a></div>
+                                    <div class="small"><a href="meritList.php">View Merit List</a></div>
                                 </div>
                             </div>
                         </div>

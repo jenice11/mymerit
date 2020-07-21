@@ -4,6 +4,15 @@ require_once "../libs/database.php";
 $sql = "SELECT * FROM merit";
 $result = mysqli_query($conn,$sql);
 
+if(isset($_POST['delete'])){
+    $query = "DELETE from merit where meritID='$_POST[meritID]'";
+    if (mysqli_query($conn, $query)) {
+        echo "<script>alert('Committee Merit Deleted Successful!'); </script>";
+        echo "<script type= 'text/javascript'> window.location='meritList.php'</script>";
+    } else {
+        echo "<script>alert('".mysqli_error($conn)."')</script>";       
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -144,6 +153,8 @@ $result = mysqli_query($conn,$sql);
                                             <td>
                                                 <form action="" method="POST">
                                                     <input type="button" class="btn btn-primary" onclick="location.href='meritView.php?meritID=<?=$row['meritID']?>'" value="VIEW DETAILS">
+                                                    <input type="hidden" name="meritID" value="<?php echo $row['meritID'] ?>">
+                                                    <input type="submit" class="btn btn-danger" value="DELETE" name="delete" >
                                                 </form>
                                             </td>
                                             <?php
@@ -154,7 +165,8 @@ $result = mysqli_query($conn,$sql);
 
                                     ?>
 
-                                </table>    
+                                </table>  
+                                <button class="btn btn-primary btn-block" type="submit" name="add" onclick="location.href='meritAdd.php'">Add New Committee Merit</button>  
                             </div>
                         </div>
                     </div>
