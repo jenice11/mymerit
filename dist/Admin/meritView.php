@@ -1,16 +1,14 @@
 <?php
 require_once "../libs/database.php";
 
-$sql = "SELECT * FROM merit";
+$meritID = $_GET['meritID'];
+$sql = "SELECT * FROM merit WHERE meritID='$meritID'";
 $result = mysqli_query($conn,$sql);
 
-if(isset($_POST['delete'])){
-    $query = "DELETE from merit where meritID='$_POST[meritID]'";
-    if (mysqli_query($conn, $query)) {
-        echo "<script>alert('Committee Merit Deleted Successful!'); </script>";
-        echo "<script type= 'text/javascript'> window.location='meritList.php'</script>";
-    } else {
-        echo "<script>alert('".mysqli_error($conn)."')</script>";       
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $meritPosition = $row['meritPosition'];
+        $meritAmount = $row['meritAmount'];
     }
 }
 ?>
@@ -22,7 +20,7 @@ if(isset($_POST['delete'])){
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Merit List</title>
+    <title>View Merit Detail</title>
     <link href="../css/styles.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
@@ -126,47 +124,32 @@ if(isset($_POST['delete'])){
         <div id="layoutSidenav_content">
             <main class="mb-3">
                 <div class="container-fluid">
-                    <div class="row justify-content-center mt-4">
+                    <div class="row justify-content-center m-5">
                         <div class="col-lg-12">
-                            <div class="card shadow-lg border-0 rounded-lg mt-1">
-                                <div class="card-header"><h3 class="text-center font-weight-light my-1">Merit List</h3></div>
-                                <div class="card-body">
+                            <div class="card shadow-lg border-0 rounded-lg mt-4">
+                                <div class="card-header"><h3 class="text-center font-weight-light my-1">View Merit</h3></div>
+                                <div class="card-body mx-4" >
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th scope="col">No</th>
                                                 <th scope="col">Committee Position</th>
                                                 <th scope="col">Merit</th>
-                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
-                                        <?php
-                                        $i = 1;
-                                        if ($result->num_rows > 0) {
-                                           while($row = $result->fetch_assoc()) {
-                                            echo "<tr>"
-                                            . "<td>".$i.".</td>"
-                                            . "<td>". $row['meritPosition']."</td>" 
-                                            . "<td>". $row['meritAmount']."</td>" ;
-                                            ?>
+                                        <tbody>
+                                            <tr>
+                                                <td><?php echo $meritPosition;?></td>
+                                                <td><?php echo $meritAmount;?></td>
+                                            </tr>
+                                        </tbody>
 
-                                            <td>
-                                                <form action="" method="POST">
-                                                    <input type="button" class="btn btn-primary" onclick="location.href='meritView.php?meritID=<?=$row['meritID']?>'" value="VIEW DETAILS">
-                                                    <input type="hidden" name="meritID" value="<?php echo $row['meritID'] ?>">
-                                                    <input type="submit" class="btn btn-danger" value="DELETE" name="delete" >
-                                                </form>
-                                            </td>
-                                            <?php
-                                            $i++;
-                                            echo "</tr>";
-                                        }
-                                    }
+                                    </table>
+                                    <button class="btn btn-primary btn-block" type="submit" name="update" onclick="location.href='meritUpdate.php?meritID=<?=$meritID?>'">Update</button>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <div class="small"><a href="meritList.php">View Merit List</a></div>
+                                </div>
 
-                                    ?>
-
-                                </table>  
-                                <button class="btn btn-primary btn-block" type="submit" name="add" onclick="location.href='meritAdd.php'">Add New Committee Merit</button>  
                             </div>
                         </div>
                     </div>

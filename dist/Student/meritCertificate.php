@@ -30,7 +30,7 @@ $count = mysqli_fetch_assoc($resultCount);
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Student Identification Form</title>
+    <title>Student Merit Certificate</title>
     <link href="../css/styles.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
@@ -102,21 +102,21 @@ $count = mysqli_fetch_assoc($resultCount);
                             <div class="card shadow-lg border-0 rounded-lg mt-1">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-1">Merit Certificate</h3></div>
                                 <div class="card-body mx-4">
-                                    <table class="table-borderless mb-2" width="50%" >
+                                    <table class="table-borderless mb-2" width="60%" >
                                         <tr>
-                                            <td width="5%"><b>Name:</b></td>
+                                            <td width="15%"><b>Name:</b></td>
                                             <td width="45%"><?php echo $studName ?></td>
                                         </tr>
                                         <tr>
-                                            <td width="5%"><b>Matric: </b></td>
+                                            <td width="15%"><b>Matric: </b></td>
                                             <td width="45%"><?php echo $studMatric ?></td>
                                         </tr>
                                         <tr>
-                                            <td width="5%"><b>Session: </b></td>
+                                            <td width="15%"><b>Session: </b></td>
                                             <td width="45%">2019/2020</td>
                                         </tr>
                                         <tr>
-                                            <td width="5%"><b>Program Participated: </b></td>
+                                            <td width="15%"><b>Program Participated: </b></td>
                                             <td width="45%"><?php echo implode($count)?></td>
                                         </tr>
                                     </table>
