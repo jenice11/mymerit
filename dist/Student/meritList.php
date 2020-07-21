@@ -1,14 +1,9 @@
 <?php
 require_once "../libs/database.php";
 
-if (isset($_POST['addMerit'])){
-    $sql = "INSERT INTO merit (meritPosition, meritAmount) VALUES ('$_POST[position]', '$_POST[amount]')";
-    if (mysqli_query($conn, $sql)) {
-        echo "<script>alert('Committee Merit Added Successful!')</script>";
-    } else {
-        echo "<script>alert('".mysqli_error($conn)."')</script>";       
-    }
-}
+$sql = "SELECT * FROM merit";
+$result = mysqli_query($conn,$sql);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +13,7 @@ if (isset($_POST['addMerit'])){
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Dashboard - SB Admin</title>
+    <title>Merit List</title>
     <link href="../css/styles.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
@@ -125,29 +120,41 @@ if (isset($_POST['addMerit'])){
                     <div class="row justify-content-center mt-4">
                         <div class="col-lg-12">
                             <div class="card shadow-lg border-0 rounded-lg mt-1">
-                                <div class="card-header"><h3 class="text-center font-weight-light my-1">Add Merit</h3></div>
-                                <div class="card-body mx-4" >
-                                    <form action="" method="POST">
-                                        <div class="form-row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="small mb-1" for="Position">Position</label>
-                                                    <input class="form-control py-4" name="position" id="Position" type="text" placeholder="Enter Committee Position"/>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="small mb-1" for="Merit">Merit</label>
-                                                    <input class="form-control py-4" name="amount" id="amount" type="text" placeholder="Enter Merit Amount" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-primary btn-block" type="submit" name="addMerit">Add</button>
-                                    </form>
-                                </div>
-                                <div class="card-footer text-center">
-                                    <div class="small"><a href="#.html">View Merit List</a></div>
-                                </div>
+                                <div class="card-header"><h3 class="text-center font-weight-light my-1">Merit List</h3></div>
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">No</th>
+                                                <th scope="col">Committee Position</th>
+                                                <th scope="col">Merit</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <?php
+                                        $i = 1;
+                                        if ($result->num_rows > 0) {
+                                           while($row = $result->fetch_assoc()) {
+                                            echo "<tr>"
+                                            . "<td>".$i.".</td>"
+                                            . "<td>". $row['meritPosition']."</td>" 
+                                            . "<td>". $row['meritAmount']."</td>" ;
+                                            ?>
+
+                                            <td>
+                                                <form action="" method="POST">
+                                                    <input type="button" class="btn btn-primary" onclick="location.href='meritView.php?meritID=<?=$row['meritID']?>'" value="VIEW DETAILS">
+                                                </form>
+                                            </td>
+                                            <?php
+                                            $i++;
+                                            echo "</tr>";
+                                        }
+                                    }
+
+                                    ?>
+
+                                </table>    
                             </div>
                         </div>
                     </div>
