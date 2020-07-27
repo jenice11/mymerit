@@ -9,6 +9,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $meritPosition = $row['meritPosition'];
         $meritAmount = $row['meritAmount'];
+        $meritPicture = $row['meritPicture'];
     }
 }
 ?>
@@ -77,21 +78,26 @@ if ($result->num_rows > 0) {
             <main class="mb-3">
                 <div class="container-fluid">
                     <div class="row justify-content-center m-5">
-                        <div class="col-lg-12">
+                        <div class="col-lg-10">
                             <div class="card shadow-lg border-0 rounded-lg mt-4">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-1">View Merit</h3></div>
                                 <div class="card-body mx-4" >
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Committee Position</th>
-                                                <th scope="col">Merit</th>
+                                                <th scope="col" width="50%">Committee Position</th>
+                                                <th scope="col" width="20%">Merit</th>
+                                                <th scope="col" width="30%">Picture</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td><?php echo $meritPosition;?></td>
                                                 <td><?php echo $meritAmount;?></td>
+                                                <td>
+                                                    <div style="width: 200px">
+                                                        <img src="<?php echo $meritPicture; ?>" width="100%"></td>
+                                                    </div>
                                             </tr>
                                         </tbody>
 
@@ -110,7 +116,7 @@ if ($result->num_rows > 0) {
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2020</div>
+                        <div class="text-muted">Copyright &copy; MyMerit 2020</div>
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;

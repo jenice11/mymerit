@@ -95,7 +95,7 @@ $count = mysqli_fetch_assoc($resultCount);
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Core</div>
                         <a class="nav-link" href="#">
-                            <div class="sb-nav-link-icon active"><i class="fas fa-tachometer-alt"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Merit Certificate
                         </a>
                         <a class="nav-link" href="attForm.php?progid=1">
@@ -206,7 +206,7 @@ $count = mysqli_fetch_assoc($resultCount);
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2020</div>
+                        <div class="text-muted">Copyright &copy; MyMerit 2020</div>
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;

@@ -34,10 +34,7 @@ if(isset($_POST['delete'])){
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
             <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" />
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
-                </div>
+               
             </div>
         </form>
         <!-- Navbar-->
@@ -83,7 +80,7 @@ if(isset($_POST['delete'])){
                             <div class="card shadow-lg border-0 rounded-lg mt-1">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-1">Merit List</h3></div>
                                 <div class="card-body">
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered" id="tableList">
                                         <thead>
                                             <tr>
                                                 <th scope="col">No</th>
@@ -118,18 +115,69 @@ if(isset($_POST['delete'])){
                                     }
 
                                     ?>
-
                                 </table>  
+                                <br>
                                 <button class="btn btn-primary btn-block" type="submit" name="add" onclick="location.href='meritAdd.php'">Add New Committee Merit</button>  
                             </div>
                         </div>
                     </div>
                 </div>
+                <div>
+                    <div id="chart-container">
+        <canvas id="graphCanvas"></canvas>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            showGraph();
+        });
+
+
+        function showGraph()
+        {
+            {
+                $.post("data.php",
+                function (data)
+                {
+                    console.log(data);
+                     var name = [];
+                    var marks = [];
+
+                    for (var i in data) {
+                        name.push(data[i].student_name);
+                        marks.push(data[i].marks);
+                    }
+
+                    var chartdata = {
+                        labels: name,
+                        datasets: [
+                            {
+                                label: 'Student Marks',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                data: marks
+                            }
+                        ]
+                    };
+
+                    var graphTarget = $("#graphCanvas");
+
+                    var barGraph = new Chart(graphTarget, {
+                        type: 'bar',
+                        data: chartdata
+                    });
+                });
+            }
+        }
+        </script>
+                </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2020</div>
+                        <div class="text-muted">Copyright &copy; MyMerit 2020</div>
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;
@@ -140,6 +188,7 @@ if(isset($_POST['delete'])){
             </footer>
         </div>
     </div>
+    
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
@@ -149,5 +198,12 @@ if(isset($_POST['delete'])){
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
     <script src="assets/demo/datatables-demo.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+        $('#tableList').DataTable();
+    } );
+    </script>
+
+
 </body>
 </html>

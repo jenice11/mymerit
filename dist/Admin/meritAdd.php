@@ -2,7 +2,19 @@
 require_once "../libs/database.php";
 
 if (isset($_POST['addMerit'])){
-    $sql = "INSERT INTO merit (meritPosition, meritAmount) VALUES ('$_POST[position]', '$_POST[amount]')";
+    $fileinfo=PATHINFO($_FILES['photo']['name']);
+    if(empty($fileinfo['filename'])){
+        $location="";
+    }
+    else{
+        $newFilename=$fileinfo['filename'] . "." . $fileinfo['extension'];
+        move_uploaded_file($_FILES["photo"]["tmp_name"],"meritPicture/" . $newFilename);
+        $location="meritPicture/" . $newFilename;
+    }
+
+    $sql = "INSERT INTO merit (meritPosition, meritAmount, meritPicture) VALUES ('$_POST[position]', '$_POST[amount]', '$location')";
+    // print_r($sql);
+    // exit();
     if (mysqli_query($conn, $sql)) {
         echo "<script>alert('Committee Merit Added Successful!')</script>";
          echo "<script type= 'text/javascript'> window.location='meritList.php'</script>";
@@ -80,7 +92,7 @@ if (isset($_POST['addMerit'])){
                             <div class="card shadow-lg border-0 rounded-lg mt-1">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-1">Add Merit</h3></div>
                                 <div class="card-body mx-4" >
-                                    <form action="" method="POST">
+                                    <form action="" method="POST" enctype="multipart/form-data">
                                         <div class="form-row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -93,6 +105,18 @@ if (isset($_POST['addMerit'])){
                                                     <label class="small mb-1" for="Merit">Merit</label>
                                                     <input class="form-control py-4" name="amount" id="amount" type="text" placeholder="Enter Merit Amount" />
                                                 </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                            <label class="control-label"><b>Add merit image here:</b></label><br>
+                                                              <input type="file" name="photo" onchange="loadFile(event)" accept="image/*">
+                                                              <br><br>
+                                                        <img  id="output" width="300px"/>
+                                                          <script>
+                                                            var loadFile = function(event) {
+                                                              var output = document.getElementById('output');
+                                                                output.src = URL.createObjectURL(event.target.files[0]);
+                                                            };
+                                                          </script>
                                             </div>
                                         </div>
                                         <button class="btn btn-primary btn-block" type="submit" name="addMerit">Add</button>
@@ -109,7 +133,7 @@ if (isset($_POST['addMerit'])){
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2020</div>
+                        <div class="text-muted">Copyright &copy; MyMerit 2020</div>
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;
