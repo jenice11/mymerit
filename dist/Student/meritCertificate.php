@@ -1,25 +1,45 @@
 <?php
 require_once "../libs/database.php";
 
-    // $matric = $_POST['matrics'];
-$studid = "2";
+$studid = "3";
 
-$sql = "SELECT * FROM attendance INNER JOIN program ON attendance.progID = program.progID  INNER JOIN student on attendance.studID = student.studID, (SELECT SUM(merit) FROM attendance as totalmerit) t WHERE attendance.studID ='$studid' order by program.progDate";
+$totalmerit = 0;
+$pMerit = 0;
+$cMerit = 0;
+
+$sql = "SELECT * FROM attendance INNER JOIN program ON attendance.progID = program.progID  RIGHT JOIN student on attendance.studID = student.studID   LEFT OUTER JOIN merit ON merit.meritID = attendance.meritID  WHERE attendance.studID ='$studid' order by program.progDate ";
 
 $result = mysqli_query($conn,$sql);
 $result2 = mysqli_query($conn,$sql);
-// $data[] = mysqli_fetch_assoc($result);
 
 while($student = mysqli_fetch_array($result2)) {
     $studName = $student['studName'];
+    $studID = $student['studID'];
     $studMatric = $student['studMatric'];
-    $totalmerit = $student['SUM(merit)'];
-    
+    $progID = $student['progID'];
+    $meritID = $student['meritID'];
+    $meritPosition = $student['meritPosition'];
+    if($meritID == 0)
+    {
+        $query = "SELECT SUM(progMerit) as pMerit FROM program INNER JOIN attendance ON attendance.progID = program.progID  WHERE attendance.studID = '$studID' AND program.progID = '$progID'";
+        $data = mysqli_query($conn,$query);
+        while($row = mysqli_fetch_array($data)) {
+            $pMerit = $row['pMerit'];
+        }
+    }
+    else{
+        $query = "SELECT SUM(meritAmount) as cMerit FROM merit INNER JOIN attendance ON attendance.meritID = merit.meritID  WHERE attendance.studID = '$studID'";
+        $data = mysqli_query($conn,$query);
+        while($row = mysqli_fetch_array($data)) {
+            $cMerit = $row['cMerit'];
+        }
+    }
 }
 
 $countSQL = "SELECT COUNT(studID) as count FROM attendance WHERE studID ='$studid'";
 $resultCount = mysqli_query($conn,$countSQL);
 $count = mysqli_fetch_assoc($resultCount);
+
 ?>
 
 <!DOCTYPE html>
@@ -75,8 +95,8 @@ $count = mysqli_fetch_assoc($resultCount);
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Core</div>
                         <a class="nav-link" href="#">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Event List
+                            <div class="sb-nav-link-icon active"><i class="fas fa-tachometer-alt"></i></div>
+                            Merit Certificate
                         </a>
                         <a class="nav-link" href="attForm.php?progid=1">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
@@ -142,25 +162,21 @@ $count = mysqli_fetch_assoc($resultCount);
                                                     <td><?php echo $row['progDesc'];?></td>
                                                     
                                                     <td>
-                                                        <?php
-                                                        if($row['progChair']==$row['studID']){
-                                                            echo "Program chair";
-                                                        }
-                                                        elseif ($row['progCo']==$row['studID']) {
-                                                            echo "Program co-chair";
-                                                        }
-                                                        elseif ($row['progMain']==$row['studID']) {
-                                                            echo "Main committee";
-                                                        }
-                                                        elseif ($row['progSub']==$row['studID']) {
-                                                            echo "Sub committee";
-                                                        }
-                                                        else{
+                                                        <?php 
+                                                        if($row['meritPosition'] == null){
                                                             echo "Participant";
-                                                        }
-                                                        ?>
+                                                        }else{
+                                                             echo $row['meritPosition'];
+                                                        } ?> 
                                                     </td>
-                                                    <td><?php echo $row['merit'];?></td>
+                                                    <td>
+                                                        <?php 
+                                                        if($row['meritPosition'] == null){
+                                                            echo $row['progMerit'];
+                                                        }else{
+                                                             echo $row['meritAmount'];
+                                                        } ?> 
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                             <?php 
@@ -169,7 +185,12 @@ $count = mysqli_fetch_assoc($resultCount);
                                         <tfoot>
                                             <tr>
                                                 <td colspan="5" align="right"><b>Total Merit: </b></td>
-                                                <td><b><?php echo $totalmerit?></b></td>
+                                                <td><b>
+                                                <?php 
+                                                $totalmerit = $cMerit + $pMerit;
+                                                echo $totalmerit;
+                                                ?>
+                                                </b></td>
                                             </tr>
                                         </tfoot>
                                     </table>                  
