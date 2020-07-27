@@ -1,65 +1,92 @@
 <?php
 require_once "../libs/database.php";
 
-$merit = 0;
 $rolechk = false;
 $role = "Participant";
 
 
 //need get variable here (static so far)
-$matric = "CB18188";
+// $matric = "CB18188";
+$studID = "4";
 $progid = "1";
-$attID = "14";
 
 //committee sql check
 //chair
-$sqlChair = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progChair WHERE program.progID='$progid' AND student.studMatric = '$matric'";
+$sqlChair = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progChair WHERE program.progID='$progid' AND student.studID = '$studID'";
 $resultChair = mysqli_query($conn,$sqlChair);
 $countChair = mysqli_num_rows($resultChair);
 
 //co-chair
-$sqlCo = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progCo WHERE program.progID='$progid' AND student.studMatric = '$matric'";
+$sqlCo = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progCo WHERE program.progID='$progid' AND student.studID = '$studID'";
 $resultCo = mysqli_query($conn,$sqlCo);
 $countCo = mysqli_num_rows($resultCo);
 
 //main
-$sqlMain = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progCo WHERE program.progID='$progid' AND student.studMatric = '$matric'";
+$sqlMain = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progMain WHERE program.progID='$progid' AND student.studID = '$studID'";
 $resultMain = mysqli_query($conn,$sqlMain);
 $countMain = mysqli_num_rows($resultMain);
 
 //sub
-$sqlSub = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progCo WHERE program.progID='$progid' AND student.studMatric = '$matric'";
+$sqlSub = "SELECT * FROM program RIGHT JOIN student ON student.studID = program.progSub WHERE program.progID='$progid' AND student.studID = '$studID'";
 $resultSub = mysqli_query($conn,$sqlSub);
 $countSub = mysqli_num_rows($resultSub);
 
-$query = "SELECT * FROM program WHERE progID='$progid'";
-$resultProg = mysqli_query($conn,$query);
-$countProg = mysqli_num_rows($resultProg);
-
 if ($countChair == 1) {
-    $merit = 500;
-    $role = "Program chair";
+    $role = "1";   
+    $queryMerit = "SELECT *,merit.meritID as keyID FROM attendance INNER JOIN merit WHERE merit.meritID ='$role' AND attendance.studID='$studID' AND attendance.progID = '$progid'";
+    $data = mysqli_query($conn,$queryMerit);
+    while($v = mysqli_fetch_assoc($data)){
+        $attID = $v["attID"];
+        $meritFID = $v["keyID"];
+        $meritPosition = $v["meritPosition"];
+        $meritAmount = $v["meritAmount"];
+    }
     $rolechk = true;
 } elseif ($countCo == 1) {
-    $merit = 450;
-    $role = "Program co-chair";
+    $role = "2";   
+    $queryMerit = "SELECT * FROM attendance INNER JOIN merit on attendance.meritID = merit.meritID  WHERE merit.meritID ='$role' AND attendance.studID='$studID' AND attendance.progID = '$progid'";
+    $data = mysqli_query($conn,$queryMerit);
+    while($v = mysqli_fetch_assoc($data)){
+        $attID = $v["attID"];
+        $meritID = $v["meritID"];
+        $meritPosition = $v["meritPosition"];
+        $meritAmount = $v["meritAmount"];
+    }
     $rolechk = true;
 } elseif ($countMain == 1) {
-    $merit = 300;
-    $role = "Main committee";
+    $role = "3";   
+    $queryMerit = "SELECT * FROM attendance INNER JOIN merit on attendance.meritID = merit.meritID  WHERE merit.meritID ='$role' AND attendance.studID='$studID' AND attendance.progID = '$progid'";
+    $data = mysqli_query($conn,$queryMerit);
+    while($v = mysqli_fetch_assoc($data)){
+        $attID = $v["attID"];
+        $meritID = $v["meritID"];
+        $meritPosition = $v["meritPosition"];
+        $meritAmount = $v["meritAmount"];
+    }
     $rolechk = true;
 } elseif ($countSub == 1) {
-    $merit = 200;
-    $role = "Sub committee";
+    $role = "4";   
+    $queryMerit = "SELECT * FROM attendance INNER JOIN merit on attendance.meritID = merit.meritID  WHERE merit.meritID ='$role' AND attendance.studID='$studID' AND attendance.progID = '$progid'";
+
+    $data = mysqli_query($conn,$queryMerit);
+    while($v = mysqli_fetch_assoc($data)){
+        $attID = $v["attID"];
+        $meritID = $v["meritID"];
+        $meritPosition = $v["meritPosition"];
+        $meritAmount = $v["meritAmount"];
+    }
     $rolechk = true;
 }
 
-$sql = "SELECT * FROM student WHERE studMatric ='$matric'";
+$sql = "SELECT * FROM student INNER JOIN program INNER JOIN attendance ON attendance.studID = student.studID AND attendance.progID = program.progID WHERE attendance.studID ='$studID' AND  attendance.progID='$progid'";
+
 $result = mysqli_query($conn,$sql);
 $count = mysqli_num_rows($result);
 
-
-while($row = mysqli_fetch_assoc($resultProg)){
+while($row = mysqli_fetch_assoc($result)){
+    $studName = $row["studName"];
+    $studMatric = $row["studMatric"];
+    $studPhone = $row["studPhone"];
     $progID = $row["progID"];
     $progName = $row["progName"];
     $progDate = $row["progDate"];
@@ -67,23 +94,30 @@ while($row = mysqli_fetch_assoc($resultProg)){
     $progDesc = $row["progDesc"];
     $merit = $row['progMerit'];
     $progProof = $row['progProof'];
-}
-
-while($row2 = mysqli_fetch_assoc($result)){
-    $studName = $row2["studName"];
-    $studMatric = $row2["studMatric"];
-    $studPhone = $row2["studPhone"];
+    $attID = $row["attID"];
 }
 
 if (isset($_POST['claim'])){
-    if($countProg == 1) 
+    if($count > 0) 
     {
-        $sql = "UPDATE attendance SET merit ='$merit' WHERE attID = '$attID'";
-        if (mysqli_query($conn, $sql)) {
-            echo "<script>alert('Merit Claimed Successfully!')</script>";
-        } else {
-            echo "<script>alert('".mysqli_error($conn)."')</script>";       
+        if($rolechk == true)
+        {
+            $sql = "UPDATE attendance SET meritID ='$meritFID' WHERE attID = '$attID'";
+            if (mysqli_query($conn, $sql)) {
+                echo "<script>alert('Committee Merit Claimed Successfully!')</script>";
+            } else {
+                echo "<script>alert('".mysqli_error($conn)."')</script>";       
+            }
         }
+        else{
+            $sql = "UPDATE attendance SET meritID ='0' WHERE attID = '$attID'";
+            if (mysqli_query($conn, $sql)) {
+                echo "<script>alert('Participant Merit Claimed Successfully!')</script>";
+            } else {
+                echo "<script>alert('".mysqli_error($conn)."')</script>";       
+            }
+        }
+        
     } 
     else {
         echo "<script>alert('Merit Claim Failed!')</script>";
@@ -205,8 +239,8 @@ if (isset($_POST['claim'])){
                                                     <td><?php echo $studName ?></td>
                                                     <td><?php echo $studMatric ?></td>
                                                     <td><?php echo $studPhone ?></td>
-                                                    <td><?php echo $role ?></td>
-                                                    <td><?php echo $merit ?></td>
+                                                    <td><?php echo $meritPosition ?></td>
+                                                    <td><?php echo $meritAmount ?></td>
                                                 </tr>
                                             </table>
                                             <?php 
