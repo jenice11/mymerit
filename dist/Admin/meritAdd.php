@@ -2,13 +2,13 @@
 require_once "../libs/database.php";
 
 if (isset($_POST['addMerit'])){
-    $fileinfo=PATHINFO($_FILES['photo']['name']);
+    $fileinfo=PATHINFO($_FILES['meritPicture']['name']);
     if(empty($fileinfo['filename'])){
         $location="";
     }
     else{
         $newFilename=$fileinfo['filename'] . "." . $fileinfo['extension'];
-        move_uploaded_file($_FILES["photo"]["tmp_name"],"meritPicture/" . $newFilename);
+        move_uploaded_file($_FILES["meritPicture"]["tmp_name"],"meritPicture/" . $newFilename);
         $location="meritPicture/" . $newFilename;
     }
 
@@ -108,7 +108,7 @@ if (isset($_POST['addMerit'])){
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="control-label"><b>Add merit image here:</b></label><br>
-                                                <input type="file" name="photo" onchange="loadFile(event)" accept="image/*">
+                                                <input type="file" name="meritPicture" onchange="loadFile(event)" accept="image/*">
                                                 <br><br>
                                                 <img  id="output" width="300px"/>
                                                 <script>

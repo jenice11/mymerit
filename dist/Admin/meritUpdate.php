@@ -3,7 +3,17 @@ require_once "../libs/database.php";
 
 $meritID = $_GET['meritID'];
 if (isset($_POST['update'])){
-    $query = "UPDATE merit SET meritPosition ='$_POST[meritPosition]', meritAmount='$_POST[meritAmount]' WHERE meritID = '$meritID'";
+    $fileinfo=PATHINFO($_FILES['meritPicture']['name']);
+    if(empty($fileinfo['filename'])){
+        $location="";
+    }
+    else{
+      $newFilename=$fileinfo['filename'] . "." . $fileinfo['extension'];
+      move_uploaded_file($_FILES["meritPicture"]["tmp_name"],"meritPicture/" . $newFilename);
+      $location="meritPicture/" . $newFilename;
+  }
+
+    $query = "UPDATE merit SET meritPosition ='$_POST[meritPosition]', meritAmount='$_POST[meritAmount]', meritPicture='$location' WHERE meritID = '$meritID'";
     if (mysqli_query($conn, $query)) {
         echo "<script>alert('Committee Merit Updated Successful!')</script>";
     } else {
@@ -17,6 +27,7 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $meritPosition = $row['meritPosition'];
         $meritAmount = $row['meritAmount'];
+        $meritPicture = $row['meritPicture'];
     }
 }
 ?>
@@ -89,7 +100,7 @@ if ($result->num_rows > 0) {
                             <div class="card shadow-lg border-0 rounded-lg mt-1">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-1">Update Merit</h3></div>
                                 <div class="card-body mx-4" >
-                                    <form action="" method="POST">
+                                    <form action="" method="POST" enctype="multipart/form-data">
                                         <div class="form-row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -103,7 +114,21 @@ if ($result->num_rows > 0) {
                                                     <input class="form-control py-4" name="meritAmount" id="amount" type="text" value="<?php echo $meritAmount ?>">
                                                 </div>
                                             </div>
+                                            <div class="col-md-3">
+                                                <label class="control-label"><b>Update merit picture here:</b></label><br>
+                                                <input type="file" id="meritPicture" name="meritPicture" onchange="loadFile(event)"  accept="image/*">
+                                                <br><br>
+                                                <img src="<?php echo $meritPicture; ?>" id="output" width="300px"/>
+                                                <script>
+                                                  var loadFile = function(event) {
+                                                    var output = document.getElementById('output');
+                                                    output.src = URL.createObjectURL(event.target.files[0]);
+                                                  };
+                                                </script>
+                                          </div>
+                                          <br>
                                         </div>
+                                        <br>
                                         <button class="btn btn-primary btn-block" type="submit" name="update">Update</button>
                                     </form>
                                 </div>
