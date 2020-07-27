@@ -58,46 +58,46 @@ if ($result->num_rows > 0) {
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                        <div class="sb-sidenav-menu-heading">Merit List</div>
-                        <a class="nav-link" href="meritList.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Merit List
-                        </a>
-                        <a class="nav-link" href="meritAdd.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Add Merit
-                        </a>
-                    </div>
+                       <a class="nav-link" href="meritList.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Merit List
+                    </a>
+                    <a class="nav-link" href="meritAdd.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                        Add Merit
+                    </a>
                 </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Start Bootstrap
-                </div>
-            </nav>
-        </div>
-        <div id="layoutSidenav_content">
-            <main class="mb-3">
-                <div class="container-fluid">
-                    <div class="row justify-content-center m-5">
-                        <div class="col-lg-10">
-                            <div class="card shadow-lg border-0 rounded-lg mt-4">
-                                <div class="card-header"><h3 class="text-center font-weight-light my-1">View Merit</h3></div>
-                                <div class="card-body mx-4" >
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" width="50%">Committee Position</th>
-                                                <th scope="col" width="20%">Merit</th>
-                                                <th scope="col" width="30%">Picture</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><?php echo $meritPosition;?></td>
-                                                <td><?php echo $meritAmount;?></td>
-                                                <td>
-                                                    <div style="width: 200px">
-                                                        <img src="<?php echo $meritPicture; ?>" width="100%"></td>
-                                                    </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Logged in as:</div>
+                Start Bootstrap
+            </div>
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <main class="mb-3">
+            <div class="container-fluid">
+                <div class="row justify-content-center m-5">
+                    <div class="col-lg-10">
+                        <div class="card shadow-lg border-0 rounded-lg mt-4">
+                            <div class="card-header"><h3 class="text-center font-weight-light my-1">View Merit</h3></div>
+                            <div class="card-body mx-4" >
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" width="50%">Committee Position</th>
+                                            <th scope="col" width="20%">Merit</th>
+                                            <th scope="col" width="30%">Picture</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><?php echo $meritPosition;?></td>
+                                            <td><?php echo $meritAmount;?></td>
+                                            <td>
+                                                <div style="width: 200px">
+                                                    <img src="<?php echo $meritPicture; ?>" width="100%"></td>
+                                                </div>
                                             </tr>
                                         </tbody>
 

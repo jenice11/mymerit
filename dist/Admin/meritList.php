@@ -13,6 +13,14 @@ if(isset($_POST['delete'])){
         echo "<script>alert('".mysqli_error($conn)."')</script>";       
     }
 }
+
+$sql2 = "SELECT merit.meritPosition,COUNT(attendance.meritID) as count FROM attendance INNER JOIN merit ON merit.meritID = attendance.meritID GROUP BY attendance.meritID";
+$result2 = mysqli_query($conn,$sql2);
+while($v = $result2->fetch_assoc()) {
+    $meritPosition[] = $v['meritPosition'];
+    $positionCount[] = $v['count'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +43,7 @@ if(isset($_POST['delete'])){
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
             <div class="input-group">
-               
+
             </div>
         </form>
         <!-- Navbar-->
@@ -98,7 +106,6 @@ if(isset($_POST['delete'])){
                                             . "<td>".$i.".</td>"
                                             . "<td>". $row['meritPosition']."</td>" 
                                             . "<td>". $row['meritAmount']."</td>" ;
-                                            $meritPosition[] = $row['meritPosition'];
                                             ?>
 
                                             <td>
@@ -106,7 +113,7 @@ if(isset($_POST['delete'])){
                                                     <button class="btn btn-info" onclick="location.href='meritView.php?meritID=<?=$row['meritID']?>'" type="button"><i class="fas fa-folder"></i> &nbsp;View</button>
                                                     <button class="btn btn-warning" onclick="location.href='meritUpdate.php?meritID=<?=$row['meritID']?>'" type="button"><i class="fas fa-pencil-alt"></i> &nbsp;Edit</button> 
                                                     <button class="btn btn-danger" value="DELETE" name="delete" type="submit"><i class="fas fa-trash"></i> &nbsp;Delete</button>
-                                                     <input type="hidden" name="meritID" value="<?php echo $row['meritID'] ?>">
+                                                    <input type="hidden" name="meritID" value="<?php echo $row['meritID'] ?>">
                                                     
                                                 </form>
                                             </td>
@@ -115,23 +122,21 @@ if(isset($_POST['delete'])){
                                             echo "</tr>";
                                         }
                                     }
-
                                     ?>
                                 </table>  
                                 <br>
-                                <button class="btn btn-primary btn-block" type="submit" name="add" onclick="location.href='meritAdd.php'">Add New Committee Merit</button>  
-
+                                <button class="btn btn-primary btn-block" type="submit" name="add" onclick="location.href='meritAdd.php'">Add New Committee Merit</button>
                             </div>
-                                <div class="card-header"><h3 class="text-center font-weight-light my-1">Merit List</h3></div>
-                                <div class="card-body">
-                                 <canvas id="myChart" width="400" height="100"></canvas>
-                             </div>
-                        </div>
-                        
-                    </div>
 
+                            <div class="card-header"><h3 class="text-center font-weight-light my-1">Chart</h3></div>
+                            <div class="card-body" style="text-align: center;">
+                                <div class="row justify-content-md-center">
+                                    <canvas id="myChart" width="400" height="100"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-         
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
@@ -149,25 +154,44 @@ if(isset($_POST['delete'])){
     </div>
 
 
-<script>
-var ctx = document.getElementById('myChart').getContext('2d');
-var chart = new Chart(ctx, {
+    <script>
+        var meritPosition = <?php echo json_encode($meritPosition) ?>;
+        var positionCount = <?php echo json_encode($positionCount) ?>;
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
     // The type of chart we want to create
-    type: 'line',
+    type: 'bar',
 
     // The data for our dataset
     data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: meritPosition,
         datasets: [{
-            label: 'My First dataset',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45]
+            label: 'Position Count',
+
+            backgroundColor: 'rgb(99, 172, 255)',
+            borderColor: 'rgb(99, 172, 255)',
+            data: positionCount
         }]
     },
 
     // Configuration options go here
-    options: {}
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    min: 0, // it is for ignoring negative step.
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        if (Math.floor(value) === value) {
+                            return value;
+                        }
+                    }
+
+                }
+            }]
+        }
+    }
 });
 </script>
 
@@ -231,21 +255,21 @@ var myChart = new Chart(ctx, {
     }
 });
 </script> -->
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="js/scripts.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="assets/demo/chart-area-demo.js"></script>
-    <script src="assets/demo/chart-bar-demo.js"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
-    <script src="assets/demo/datatables-demo.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="assets/demo/chart-area-demo.js"></script>
+<script src="assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+<script src="assets/demo/datatables-demo.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
         $('#tableList').DataTable();
     } );
-    </script>
+</script>
 
 
 </body>

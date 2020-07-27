@@ -57,9 +57,9 @@ $count = mysqli_fetch_assoc($resultCount);
     <style type="text/css">
         @media print {
             #button-container{
-            display: none;
-       }
-}
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -166,63 +166,63 @@ $count = mysqli_fetch_assoc($resultCount);
                                                         if($row['meritPosition'] == null){
                                                             echo "Participant";
                                                         }else{
-                                                             echo $row['meritPosition'];
-                                                        } ?> 
-                                                    </td>
-                                                    <td>
-                                                        <?php 
-                                                        if($row['meritPosition'] == null){
-                                                            echo $row['progMerit'];
-                                                        }else{
-                                                             echo $row['meritAmount'];
-                                                        } ?> 
-                                                    </td>
-                                                </tr>
-                                            </tbody>
+                                                           echo $row['meritPosition'];
+                                                       } ?> 
+                                                   </td>
+                                                   <td>
+                                                    <?php 
+                                                    if($row['meritPosition'] == null){
+                                                        echo $row['progMerit'];
+                                                    }else{
+                                                       echo $row['meritAmount'];
+                                                   } ?> 
+                                               </td>
+                                           </tr>
+                                       </tbody>
+                                       <?php 
+                                       $i++;
+                                   } ?>
+                                   <tfoot>
+                                    <tr>
+                                        <td colspan="5" align="right"><b>Total Merit: </b></td>
+                                        <td><b>
                                             <?php 
-                                            $i++;
-                                        } ?>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="5" align="right"><b>Total Merit: </b></td>
-                                                <td><b>
-                                                <?php 
-                                                $totalmerit = $cMerit + $pMerit;
-                                                echo $totalmerit;
-                                                ?>
-                                                </b></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>                  
-                                    <div style="text-align: center">
-                                        <button type="submit" name="print" id="button-container" class="btn btn-primary form-group mt-4 mb-0 " onclick="window.print();return false;" />Print</button>
-                                    </div>
-                                </div>
+                                            $totalmerit = $cMerit + $pMerit;
+                                            echo $totalmerit;
+                                            ?>
+                                        </b></td>
+                                    </tr>
+                                </tfoot>
+                            </table>                  
+                            <div style="text-align: center">
+                                <button type="submit" name="print" id="button-container" class="btn btn-primary form-group mt-4 mb-0 " onclick="window.print();return false;" />Print</button>
                             </div>
-                        </div>    
-                    </div>
-                </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; MyMerit 2020</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
                         </div>
                     </div>
-                </div>
-            </footer>
+                </div>    
+            </div>
         </div>
-    </div>
+    </main>
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; MyMerit 2020</div>
+                <div>
+                    <a href="#">Privacy Policy</a>
+                    &middot;
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="../js/scripts.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="../js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
