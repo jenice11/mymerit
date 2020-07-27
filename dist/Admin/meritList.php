@@ -25,6 +25,7 @@ if(isset($_POST['delete'])){
     <title>Merit List</title>
     <link href="../css/styles.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
@@ -97,6 +98,7 @@ if(isset($_POST['delete'])){
                                             . "<td>".$i.".</td>"
                                             . "<td>". $row['meritPosition']."</td>" 
                                             . "<td>". $row['meritAmount']."</td>" ;
+                                            $meritPosition[] = $row['meritPosition'];
                                             ?>
 
                                             <td>
@@ -118,61 +120,18 @@ if(isset($_POST['delete'])){
                                 </table>  
                                 <br>
                                 <button class="btn btn-primary btn-block" type="submit" name="add" onclick="location.href='meritAdd.php'">Add New Committee Merit</button>  
+
                             </div>
+                                <div class="card-header"><h3 class="text-center font-weight-light my-1">Merit List</h3></div>
+                                <div class="card-body">
+                                 <canvas id="myChart" width="400" height="100"></canvas>
+                             </div>
                         </div>
+                        
                     </div>
+
                 </div>
-                <div>
-                    <div id="chart-container">
-        <canvas id="graphCanvas"></canvas>
-    </div>
-
-    <script>
-        $(document).ready(function () {
-            showGraph();
-        });
-
-
-        function showGraph()
-        {
-            {
-                $.post("data.php",
-                function (data)
-                {
-                    console.log(data);
-                     var name = [];
-                    var marks = [];
-
-                    for (var i in data) {
-                        name.push(data[i].student_name);
-                        marks.push(data[i].marks);
-                    }
-
-                    var chartdata = {
-                        labels: name,
-                        datasets: [
-                            {
-                                label: 'Student Marks',
-                                backgroundColor: '#49e2ff',
-                                borderColor: '#46d5f1',
-                                hoverBackgroundColor: '#CCCCCC',
-                                hoverBorderColor: '#666666',
-                                data: marks
-                            }
-                        ]
-                    };
-
-                    var graphTarget = $("#graphCanvas");
-
-                    var barGraph = new Chart(graphTarget, {
-                        type: 'bar',
-                        data: chartdata
-                    });
-                });
-            }
-        }
-        </script>
-                </div>
+         
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
@@ -188,6 +147,90 @@ if(isset($_POST['delete'])){
             </footer>
         </div>
     </div>
+
+
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+            label: 'My First dataset',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [0, 10, 5, 2, 20, 30, 45]
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+
+<!--     <script>
+var itemCount = <?php echo $itemCount; ?>;
+var colors = [];
+for (var i = 0; i < itemCount; i++){
+    colors[i] = getRandomColor();
+}
+//generate rgba colors
+function getRandomColor(){
+        
+        var color = 'rgba('+(Math.floor(Math.random() * 256))+','+(Math.floor(Math.random() * 256))+','+(Math.floor(Math.random() * 256))+','+'0.6)';
+
+        return color;
+    }
+
+
+
+var meritPosition = <?php echo json_encode($meritPosition) ?>;
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: chartData,
+        datasets: [
+            {
+                type: 'doughnut',
+                label: "Sales Report",
+                fill: false,
+                lineTension: 0.1,
+                //backgroundColor: "rgba(75,192,192,0.4)",
+                backgroundColor: colors,
+                //borderColor: "rgba(75,192,192,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                data: quantity,
+                spanGaps: false,
+            }
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+</script> -->
     
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
