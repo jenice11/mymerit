@@ -105,13 +105,13 @@ if ($result->num_rows > 0) {
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="small mb-1" for="Position">Position</label>
-                                                    <input class="form-control py-4" name="meritPosition" id="Position" type="text" value="<?php echo $meritPosition ?>">
+                                                    <input class="form-control py-4" name="meritPosition" id="Position" type="text" value="<?php echo $meritPosition ?>" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="small mb-1" for="Merit">Merit</label>
-                                                    <input class="form-control py-4" name="meritAmount" id="amount" type="text" value="<?php echo $meritAmount ?>">
+                                                    <input class="form-control py-4" name="meritAmount" id="amount" type="text" value="<?php echo $meritAmount ?>" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">

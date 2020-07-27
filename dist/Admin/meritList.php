@@ -167,7 +167,7 @@ while($v = $result2->fetch_assoc()) {
     data: {
         labels: meritPosition,
         datasets: [{
-            label: 'Position Count',
+            label: 'Frequency',
 
             backgroundColor: 'rgb(99, 172, 255)',
             borderColor: 'rgb(99, 172, 255)',
@@ -194,67 +194,6 @@ while($v = $result2->fetch_assoc()) {
     }
 });
 </script>
-
-<!--     <script>
-var itemCount = <?php echo $itemCount; ?>;
-var colors = [];
-for (var i = 0; i < itemCount; i++){
-    colors[i] = getRandomColor();
-}
-//generate rgba colors
-function getRandomColor(){
-        
-        var color = 'rgba('+(Math.floor(Math.random() * 256))+','+(Math.floor(Math.random() * 256))+','+(Math.floor(Math.random() * 256))+','+'0.6)';
-
-        return color;
-    }
-
-
-
-var meritPosition = <?php echo json_encode($meritPosition) ?>;
-var ctx = document.getElementById("myChart");
-var myChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-        labels: chartData,
-        datasets: [
-            {
-                type: 'doughnut',
-                label: "Sales Report",
-                fill: false,
-                lineTension: 0.1,
-                //backgroundColor: "rgba(75,192,192,0.4)",
-                backgroundColor: colors,
-                //borderColor: "rgba(75,192,192,1)",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "rgba(75,192,192,1)",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                pointHoverBorderColor: "rgba(220,220,220,1)",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                data: quantity,
-                spanGaps: false,
-            }
-        ]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
-    }
-});
-</script> -->
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
