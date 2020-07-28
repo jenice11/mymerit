@@ -168,7 +168,6 @@ while($v = $result2->fetch_assoc()) {
         labels: meritPosition,
         datasets: [{
             label: 'Frequency',
-
             backgroundColor: 'rgb(99, 172, 255)',
             borderColor: 'rgb(99, 172, 255)',
             data: positionCount
