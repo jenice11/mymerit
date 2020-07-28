@@ -108,7 +108,7 @@ if (isset($_POST['claim'])){
             $sql = "UPDATE attendance SET meritID ='$meritFID' WHERE attID = '$attID'";
             if (mysqli_query($conn, $sql)) {
                 echo "<script>alert('Committee Merit Claimed Successfully!')</script>";
-                echo "<script type= 'text/javascript'> window.location='meritCertificate.php?attid=$attdid&progid=$progid&studid=$studID'</script>";
+                echo "<script type= 'text/javascript'> window.location='meritCertificate.php'</script>";
             } else {
                 echo "<script>alert('".mysqli_error($conn)."')</script>";       
             }
@@ -117,6 +117,7 @@ if (isset($_POST['claim'])){
             $sql = "UPDATE attendance SET meritID ='0' WHERE attID = '$attID'";
             if (mysqli_query($conn, $sql)) {
                 echo "<script>alert('Participant Merit Claimed Successfully!')</script>";
+                echo "<script type= 'text/javascript'> window.location='meritCertificate.php'</script>";
             } else {
                 echo "<script>alert('".mysqli_error($conn)."')</script>";       
             }
